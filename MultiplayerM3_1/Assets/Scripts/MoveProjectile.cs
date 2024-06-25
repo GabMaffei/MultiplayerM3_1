@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class MoveProjectile : MonoBehaviour
+public class MoveProjectile : NetworkBehaviour
 {
-
+    public ShootFireBall parent;
     [SerializeField] private GameObject hitParticles;
     [SerializeField] private float shootForce = 50f;
-    [SerializeField] private float timeParticles = 2f;
     private Rigidbody rb;
 
     void Start()
@@ -25,10 +25,17 @@ public class MoveProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(!IsOwner) return;
+        InstantiateHitParticlesRequestRpc();
+        parent.DestroyRequestRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void InstantiateHitParticlesRequestRpc()
+    {
         // instantiate the hit particles when we collide with something then destroy the fireball
         GameObject hitImpact = Instantiate(hitParticles, transform.position, Quaternion.identity);
+        hitImpact.GetComponent<NetworkObject>().Spawn();
         hitImpact.transform.localEulerAngles = new Vector3(0f, 0f, -90f);
-        Destroy(hitImpact, timeParticles);
-        Destroy(gameObject);
     }
 }

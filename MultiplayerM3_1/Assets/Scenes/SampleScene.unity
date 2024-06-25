@@ -1024,13 +1024,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.27337226, y: -0, z: -0, w: 0.96190834}
-  m_LocalPosition: {x: 0, y: 6.01, z: -9.88}
+  m_LocalRotation: {x: 0.32423228, y: -0, z: -0, w: 0.94597745}
+  m_LocalPosition: {x: 0, y: 8.71, z: -11.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 31.73, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 37.838, y: 0, z: 0}
 --- !u!1 &1179990816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,7 +1810,7 @@ MonoBehaviour:
     EnableNetworkLogs: 1
     OldPrefabList: []
   RunInBackground: 1
-  LogLevel: 0
+  LogLevel: 1
 --- !u!4 &1933748777
 Transform:
   m_ObjectHideFlags: 0

@@ -1,29 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ShootFireBall : MonoBehaviour
+public class ShootFireBall : NetworkBehaviour
 {
 
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform[] projectileSpawnPoint;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    // List to hold all the instantiated fireballs
+    [SerializeField] private List<GameObject> spawnedBullets = new List<GameObject>();
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
+
         if (Input.GetMouseButtonDown(0))
         {
             foreach(Transform SpawnPoints in projectileSpawnPoint)
             {
-                GameObject bullet = Instantiate(projectilePrefab, SpawnPoints.position, transform.rotation);
-                Physics.IgnoreCollision(bullet.GetComponent<Collider>(), GetComponentInChildren<CapsuleCollider>());
+                InstantiateBulletRequestRpc(SpawnPoints.position);
             }
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    void InstantiateBulletRequestRpc(Vector3 shootingPosition, RpcParams rpcParams = default)
+    {
+        GameObject bullet = Instantiate(projectilePrefab, shootingPosition, transform.rotation);
+        Physics.IgnoreCollision(bullet.GetComponent<Collider>(), GetComponentInChildren<CapsuleCollider>());
+        spawnedBullets.Add(bullet);
+        bullet.GetComponent<MoveProjectile>().parent = this;
+        bullet.GetComponent<NetworkObject>().Spawn();
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void DestroyRequestRpc(RpcParams rpcParams= default)
+    {
+        GameObject toDestroy = spawnedBullets[0];
+        toDestroy.GetComponent<NetworkObject>().Despawn();
+        spawnedBullets.Remove(toDestroy);
+        Destroy(toDestroy);
     }
 }

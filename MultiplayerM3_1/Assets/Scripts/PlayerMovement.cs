@@ -19,7 +19,12 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        animator = GetComponent<Animator>();
+        UpdatePositionRequestRpc();
+    }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    private void UpdatePositionRequestRpc(RpcParams rpcParams = default)
+    {
         transform.position = new Vector3 (Random.Range(positionRange, -positionRange), 0, Random.Range(positionRange, -positionRange));
         transform.Translate(transform.up);
         transform.rotation = new Quaternion(0,180,0,0);
