@@ -27,6 +27,9 @@ public class MoveProjectile : NetworkBehaviour
     {
         if(!IsOwner) return;
         InstantiateHitParticlesRequestRpc();
+        //Add hit
+        // Debug.Log("Hit by: " + (int) parent.OwnerClientId);
+        parent.HitDetectedRpc(parent.OwnerClientId);
         parent.DestroyRequestRpc();
     }
 

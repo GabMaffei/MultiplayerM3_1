@@ -43,4 +43,10 @@ public class ShootFireBall : NetworkBehaviour
         spawnedBullets.Remove(toDestroy);
         Destroy(toDestroy);
     }
+
+    [Rpc(SendTo.Server, RequireOwnership = false)]
+    public void HitDetectedRpc(ulong playerId, RpcParams rpcParams= default)
+    {
+        gameObject.GetComponent<PlayerSettings>().CountHitPointsRequestRpc(playerId);
+    }
 }

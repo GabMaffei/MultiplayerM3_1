@@ -11,6 +11,7 @@ public class NetworkUI : NetworkBehaviour
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
     [SerializeField] private TextMeshProUGUI playersCountText;
+    [SerializeField] private TextMeshProUGUI playerHitCount;
     private NetworkVariable<int> playersNum = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
 
     private void Awake() 
@@ -29,6 +30,8 @@ public class NetworkUI : NetworkBehaviour
     private void Update()
     {
         playersCountText.text = "Players: " + playersNum.Value.ToString();
+        var player = GameObject.FindWithTag("Player");
+        // playerHitCount.text = "Hits: " + (player.GetComponent<PlayerSettings>().playerHitCount[(int) OwnerClientId]).ToString();
         if(!IsServer) return;
         playersNum.Value = NetworkManager.Singleton.ConnectedClients.Count;
     }
